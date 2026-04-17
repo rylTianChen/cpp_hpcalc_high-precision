@@ -1,7 +1,7 @@
 /*
 欢迎使用此高精度库!
 作者:天辰
-版本:1.3
+版本:1.4
 使用说明:
 	这是一个有符号整数高精度计算库,不支持浮点数运算。
 	变量类型名称为HP。例: HP a=2;可以定义一个名为a的高精度变量,它存储的整数为2。
@@ -20,15 +20,15 @@
 	    若出现已知错误,返回值都是EMPTY,即空值。
 	    使用isEMPTY()获得一个HP变量是否是空值。例: if(a.isEMPTY())
     注意：
-		1. 将HP转换为int或ll时,若HP值超过int或ll范围,返回值是0。
-		2. 乘方运算限制：当指数的十进制位数超过16位时,判定结果过大,HP_pow()返回EMPTY。
-		3. 负数取模规则：余数与被除数同号(例：(-7)%3=-1、7%(-3)=1)。
-		4. 若参与运算的数包含EMPTY空值，数学运算符返回EMPTY，逻辑运算符返回false。
-		5. 由于天辰不够聪明，本库不包含位运算左移、右移。
-		6. 本库使用千进制(base-1000)内部存储，十进制压缩/解压对用户透明。
-		7. 你可以从字符串构造一个高精度整数。 例:HP a = "-3298239482049823094328";
-		   若此字符串不是一个数，变量的值是EMPTY。
-		8. 若计算结果出现错误，即某些位上的值是负数，返回值是EMPTY。
+    	1.负数取模规则：余数与被除数同号(例：(-7)%3=-1、7%(-3)=1)。
+    	2.由于天辰不够聪明，本库不包含位运算左移、右移。
+    	3.你可以从字符串构造一个高精度整数。 例:HP a = "-3298239482049823094328";
+		  若此字符串不是一个数，变量的值是EMPTY。
+    	4.将HP转换为int或ll时,若HP值超过int或ll范围,返回值是0。
+    	5.乘方运算限制：当指数的十进制位数超过8位时,判定结果过大,HP_pow()返回EMPTY。
+    	6.若计算结果出现错误，即某些位上的值是负数，返回值是EMPTY。
+    	7.若参与运算的数包含EMPTY空值，数学运算符返回EMPTY，逻辑运算符返回false。
+    	8.由于存储方法，长度不得超过int的范围。 
     其他内置函数:
         clear():将变量的值清空为EMPTY。
         length()、size():获取变量绝对值的位数。EMPTY返回0。
@@ -37,7 +37,13 @@
         AppendZero(int m):在变量末尾加入m个0。要求m为正数，且添加0后总长度不超过1e8。
         RemoveTail(int m):移除末尾的m位。要求m为正数。若m超过原长度，结果为0。
 		AppendZero与RemoveTail正常执行则返回0,出现错误返回1。
-		reverse():将数的绝对值反转,自动去除前导零。例:-380变为-83。 
+		reverse():将数的绝对值反转,自动去除前导零。例:-380变为-83。
+		SetDigit(int p, int y): 将原数末位开始第p位设置位y。成功返回0,出现问题返回1。
+								不可设置超出原数范围的位置。
+		CountDigit(int x): 统计整个数中有几个x。 EMPTY的返回值是0。
+		ISPalindrome(): 功能如其名。
+		RemoveDigit(int p): 删除从末位开始第p位的数码。成功返回0,出现问题返回1。
+		
 	你可以直接把HP变量赋值给int、long long、bool和string。 
     祝您使用愉快!
     若发现问题,请向lyrTianChen09@outlook.com反馈。
@@ -48,7 +54,7 @@
 /*
 Welcome to this high-precision library!
 Authors: TianChen
-Version: 1.3
+Version: 1.4
 Instructions:
     This is a signed arbitrary-precision integer library.
 	Floating-point operations are not supported.
@@ -64,28 +70,27 @@ Instructions:
 		If no number is inputed, the HP variable is set to EMPTY.
 	Output:
 		You can use std::cout << a;
-		Or use putHP() or putsHP() to print a high-precision number. e.g.: putHP(a); 
+		Or use putHP() or putsHP() to print a high-precision number. e.g.: putHP(a);
 		putsHP() will print an extra line break.
 	Error handling:
 		Known errors return EMPTY (empty/invalid value).
 		Use isEMPTY() to check: if (a.isEMPTY()) ...
 	Notes:
-		1. Converting HP to int or long long returns 0 if the value is out of range.
-		2. Exponentiation limit: if the exponent has more than 16 decimal digits,
-		   HP_pow() returns EMPTY.
-		3. Modulo rule for negative numbers: remainder has the same sign as the dividend
-		   (e.g. (-7) % 3 == -1, 7 % (-3) == 1).
-		4. If any operand is EMPTY:
-			 - arithmetic operators return EMPTY
-			 - comparison & logical operators return false
-		5. Since TianChen is not smart enough,
-		   this library does not include bitwise leftpush and rightpush.
-		6. Uses base-1000 internal storage.
-		   Decimal compression/decompression is handled transparently.
-		7. You can construct a HP number from a string. e.g.:HP a = "-3298239482049823094328";
-		   If the string is not a number, the HP value will be EMPTY.
-		8. If a calculation error occurs (i.e., negative values in some digits),
-		   the return value is EMPTY.
+		1.Modulo rule for negative numbers: remainder has the same sign as the dividend
+		  (e.g. (-7) % 3 == -1, 7 % (-3) == 1).
+		2.Since TianChen is not smart enough,
+		  this library does not include bitwise leftpush and rightpush.
+		3.You can construct a HP number from a string. e.g.:HP a = "-3298239482049823094328";
+		  If the string is not a number, the HP value will be EMPTY.
+		4.Converting HP to int or long long returns 0 if the value is out of range.
+		5.Exponentiation limit: if the exponent has more than 8 decimal digits,
+		  HP_pow() returns EMPTY.
+		6.If a calculation error occurs (i.e., negative values in some digits),
+		  the return value is EMPTY.
+		7.If any operand is EMPTY:
+		    - arithmetic operators return EMPTY
+		    - comparison & logical operators return false
+		8.Because of storage method, the length may not exceed the range of int.	   
 	Other built-in functions:
 		clear(): Clears the variable's value to EMPTY.
 		length(), size(): Gets the number of digits of the variable's absolute value.
@@ -104,6 +109,13 @@ Instructions:
 		If AppendZero or RemoveTail runs correctly, the return value is 0.
 		If an error occurs, the return value is 1.
 		reverse(): reverse the absolute value and remove leading zeros. e.g.: -380 will become -83.
+		SetDigit(int p, int y): Set the p-th digit from the rightmost to y.
+								p should not exceed the length of the original number.
+		CountDigit(int x): Count the number of digits which equals to x.
+						   The return value of EMPTY is 0.
+		isPalindrome(): The function is same as its name.
+		RemoveDigit(int p): Remove the p-th digit from the rightmost.
+
 	You can directly give the value of HP to int/long long/bool/string.
 	Enjoy using it!
 	Please report bugs to: lyrTianChen09@outlook.com
@@ -136,7 +148,7 @@ int main(){
 	}
 	return 0;
 }
-*/ 
+*/
 
 #ifndef GRNUM_DEF_H
 #define GRNUM_DEF_H 1031149997108990
@@ -147,8 +159,10 @@ int main(){
 #include<string>
 #include<iostream>
 #include<cmath>
+#include<cstring>
+#include<mutex>
+
 namespace grnum{
-	
 	typedef std::vector<int> vi;
 	typedef std::string str;
 	typedef long long ll;
@@ -158,22 +172,24 @@ namespace grnum{
 	const int BIT_JW = 1024;
 	//1024进制，用于位运算
 	//base-1024 storage, used in bitwise calculation
-	const int KAR_LIMIT = 128;
+	const int KAR_LIMIT = 64;
 	//使用Karatsuba算法的长度最小值
 	//Mininum length for using Karatsuba
+	const int LEN_LIMIT = 1e8;
+	const int LL_LIMIT = 6;
 	const int MAX_INT = 2147483647, MIN_INT = -2147483648;
 	const ll MAX_LL =  9223372036854775807ll, MIN_LL = -9223372036854775807ll-1;
+	const int INT_LEN = 9, LL_LEN = 18;
 
 	vi EMPTY(1, 0);//Error时返回值 error indicator
 	//EMPTY特征: EMPTY[0] = 0    Feature of EMPTY: EMPTY[0] = 0
 	vi ONE(2, 0), M_ONE(2, 0), ZERO(2, 0);//1 -1 0
 	vi BI(3, 0);//1024
 	vi 	TWO(2, 0), TEN(2, 0);//2 10
-	char FirstInit = 1;
+	std::once_flag FirstInit;
 	//第一次执行构造函数时初始化全局变量
 	//Initialize global variables on first constructor execution
 	void init(){
-		FirstInit = 0;
 		ONE[1] = ONE[0] = 1;
 		M_ONE[0] = -1, M_ONE[1] = 1;
 		ZERO[0] = 1;
@@ -215,6 +231,7 @@ namespace grnum{
         int f = a[0] > 0 ? 1 : -1;
         while(n>1 && a[n]==0) n--;
         a[0] = n*f;
+        a.resize(n+3, 0);
 	}//去除前导零 Remove leading zeros
 	short HP_VecCmp(const vi& a, const vi& b){
         int na=abs(a[0]), nb=abs(b[0]), i;
@@ -239,7 +256,7 @@ namespace grnum{
 	    HP_PopFrontZero(b);
 	    return b;
 	}
-	vi HP_unzip(vi a){//千进制解压为十进制 Decompress thousand-based to decimal
+	vi HP_unzip(vi a){
 	    int f = a[0]>0 ? 1 : -1, n = abs(a[0]), i;
 	    a.resize(n+5, 0);
 	    int nb = (n<<1)+n;//n*3
@@ -252,7 +269,7 @@ namespace grnum{
 	    b[0] = f*nb;
 	    HP_PopFrontZero(b);
 	    return b;
-	}
+	}//千进制解压为十进制 Decompress thousand-based to decimal
 	ll HP_vecTOll(const vi& b){
 	    ll ans = 0; int nb = abs(b[0]);
 		if(nb > 5) return 0;//可能溢出
@@ -272,19 +289,36 @@ namespace grnum{
 		b[0] = nb*sign;
 		return b;
 	}
+	vi HP_llTOvec(ll ai){
+		if(!ai) return ZERO;
+		vi b(1, 0);
+		int nb = 0;
+		int sign = intTOone(ai);
+		ai = abs(ai);
+		while(ai){
+			b.push_back(ai%JW);
+			ai /= JW, nb++;
+		}
+		b[0] = nb*sign;
+		return b;
+	}
 	char HP_NumCheck(const vi& a){
 		int na = abs(a[0]);
 		for(; na; na--)
 			if(a[na] < 0) return 1;
 		return 0;
 	}//合法:0 不合法:1    Valid:0 Invalid:1
+	void putvec(const vi& c){
+		for(auto i : c) printf("%d ", i);
+		puts("");
+	}//调试用 used to debug
 
 	//高精度计算函数声明
 	//Declarations of HP calculation functions
 	vi HP_Plus(vi a, vi b);
 	vi HP_Minus(vi a, vi b);
 	vi HP_Multiply(vi a, vi b);
-	vi HP_Karatsuba(int n, vi a, vi b);
+	void HP_Karatsuba(int n, const vi& a, const vi& b, vi& c);
 	vi HP_SimMul(vi a, vi b);
 	char HP_DivCmp(int r, int n, vi &a, vi &b);
 	vi HP_Divide(vi a, vi b);
@@ -305,17 +339,19 @@ namespace grnum{
 			vi num;//高精度数,千进制 high-precision number, thousand-based
 			//num[0]: 存储长度和符号,num[0]<0则num是负数
 			//num[1~num[0]]: 存储数值
-			
+
 			//num[0]: storage length and sign, if num[0]<0, num is negative
 			//num[1~num[0]]: storage the digits
-			
-			char BitIsLatest;//是否更新了1024进制形式 if 1024-based form has been updated
+
+			char BitIsLatest;
+			//是否更新了1024进制形式
+			//if 1024-based form has been updated
 			vi bit;//1024进制 1024-based
 			//bit[0]: 存储长度, bit[0]总是正数
 			//bit[1~bit[0]-1]: 存储1024进制数值
 			//bit[bit[0]]: 存储符号
 			//bit存储的是补码
-			
+
 			//bit[0]: storates length, which is always positive
 			//bit[1~bit[0]-1]: storage 1024-based value
 			//bit[bit[0]]: storage sign
@@ -339,9 +375,12 @@ namespace grnum{
 
 			//构造函数 Constructors
 			HP(){
-				num.clear(); num.push_back(0);
+				num.clear();
+				num.push_back(1);
+				num.push_back(0);
+				//num = ZERO
 				BitIsLatest = 0;
-				if(FirstInit) init();
+				std::call_once(FirstInit, init);
 			}
 			HP(int xi){
 				num.clear(), num.push_back(0);
@@ -350,17 +389,18 @@ namespace grnum{
 					num.push_back(0);
 					return;
 				}
+				num.reserve(INT_LEN+5);
+				int n = 0;
 				char z = intTOsign(xi);
 				xi = abs(xi);
 				while(xi){
 					num.push_back(xi%10);
-					xi /= 10;
+					xi /= 10, n++;
 				}
-				int len = num.size()-1;
-				num[0] = signTOint(z)*len;
+				num[0] = signTOint(z)*n;
 				num = HP_zip(num);
 				BitIsLatest = 0;
-				if(FirstInit) init();
+				std::call_once(FirstInit, init);
 			}
 			HP(ll xi){
 				num.clear(), num.push_back(0);
@@ -369,25 +409,27 @@ namespace grnum{
 					num.push_back(0);
 					return;
 				}
+				num.reserve(LL_LEN+5);
+				int n = 0;
 				char z = llTOsign(xi);
 				xi = abs(xi);
 				while(xi){
 					num.push_back(xi%10);
-					xi /= 10;
+					xi /= 10, n++;
 				}
-				int len = num.size()-1;
-				num[0] = signTOint(z)*len;
+				num[0] = signTOint(z)*n;
 				num = HP_zip(num);
 				BitIsLatest = 0;
-				if(FirstInit) init();
+				std::call_once(FirstInit, init);
 			}
 			HP(const vi& v){
 				num = v;
 				BitIsLatest = 0;
-				if(FirstInit) init();
+				std::call_once(FirstInit, init);
 			}
 			HP(const str& s){
 				num.clear(), num.push_back(0);
+				num.reserve(s.size()+5);
 				int n = 0, f=1;
 				for(auto ch : s){
 					if(IsDigit(ch)){
@@ -408,12 +450,16 @@ namespace grnum{
 					num[0] = n*f;
 					HP_reverse(num);
 					num = HP_zip(num);
-				}else num = EMPTY;
+				}else{
+					num = EMPTY;
+					num.shrink_to_fit();
+				}
 				BitIsLatest = 0;
-				if(FirstInit) init();
+				std::call_once(FirstInit, init);
 			}
 			HP(const char *p){
 				num.clear(), num.push_back(0);
+				num.reserve(strlen(p)+5);
 				int n = 0, f = 1;
 				char ch;
 				for(; (ch=*p); p++){
@@ -435,9 +481,12 @@ namespace grnum{
 					num[0] = n*f;
 					HP_reverse(num);
 					num = HP_zip(num);
-				}else num = EMPTY;
+				}else{
+					num = EMPTY;
+					num.shrink_to_fit();
+				}
 				BitIsLatest = 0;
-				if(FirstInit) init();
+				std::call_once(FirstInit, init);
 			}
 
 			//析构函数 Destructor
@@ -445,7 +494,7 @@ namespace grnum{
 
 			bool isEMPTY() const {return num[0] == 0;}
 			//是否为错误值 Checks if it is the empty (error) value
-    		void clear() {num.clear(), num.push_back(0);}//清空 clear
+    		void clear() {num.clear(), num.push_back(0), num.shrink_to_fit();}//清空 clear
 			int length() const {
 				int n = abs(num[0]), ret = n*3;
 				if(n == 0) return 0;
@@ -477,7 +526,7 @@ namespace grnum{
 			}
 			int AppendZero(int m){
 				if(m<1) return 1;
-				if(size()+m>1e8) return 1;
+				if(size()+m>LEN_LIMIT) return 1;
 				int n = abs(num[0]), i;
 				if(n == 0) return 1;
 				int x = m/3, y = m%3;
@@ -509,6 +558,47 @@ namespace grnum{
 				HP_reverse(num);
 				HP_PopFrontZero(num);
 				num = HP_zip(num);
+			}
+			int SetDigit(int p, int y){
+				if(num[0] == 0) return 1;
+				int i = (p+2)/3, j = p-i*3+3;
+				if(i > abs(num[0])) return 1;
+				if(y<0 || y>9) return 1;
+				int q, x;
+				if(j == 1) q = 1, x = num[i]%10;
+				if(j == 2) q = 10, x = num[i]/10%10;
+				if(j == 3) q = 100, x = num[i]/100;
+				num[i] -= x*q;
+				num[i] += y*q;
+				return 0;
+			}
+			int CountDigit(int x) const {
+				if(num[0] == 0) return 0;
+				if(x<1 || x>9) return 0;
+				vi a = HP_unzip(num);
+				int n = abs(a[0]), i, cnt = 0;
+				for(i=1; i<=n; i++) cnt += a[i]==x;
+				return cnt;
+			}
+			bool isPalindrome() const {
+				if(num[0] == 0) return false;
+				vi a = HP_unzip(num);
+				int n = abs(a[0]), i;
+				for(i=1; i+i<=n; i++){
+					if(a[i] != a[n-i+1]) return false;
+				}
+				return true;
+			}
+			int RemoveDigit(int p){
+				if(num[0] == 0) return 1;
+				num = HP_unzip(num);
+				int n = abs(num[0]), i;
+				if(p<1 || p>n) return 1;
+				for(i=p; i<n; i++) num[i] = num[i+1];
+				num[n] = 0, n--;
+				num[0] = n*intTOone(num[0]);
+				num = HP_zip(num);
+				return 0;
 			}
 
 			//重载运算符 Overloaded operator
@@ -631,7 +721,7 @@ namespace grnum{
 				if(HP_IsONE(a)) return HP(ONE);//1^a = 1
 				if(HP_IsM_ONE(a)) return (b[1]&1) ? HP(M_ONE) : HP(ONE);//-1^a
 				if(abs(a[0])>1 || a[1]>1){
-					if(b[0] > 5) return HP(EMPTY);
+					if(bbi.length() > 8) return HP(EMPTY);
 				}//结果过大 result considered too large
 				vi c = HP_Power(a, HP_vecTOll(b));
 				return HP(c);
@@ -1183,7 +1273,6 @@ namespace grnum{
 			}
 			friend std::ostream& operator<< (std::ostream& os, const HP&& cbi){
 				vi c = cbi.num;
-				c = HP_unzip(c);
 				if(HP_IsZERO(c)) c[0] = 1;
 				if(!c[0]) return os;
 				int nc = abs(c[0]);
@@ -1209,6 +1298,12 @@ namespace grnum{
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]), zc;
 	    int na=abs(a[0]), nb=abs(b[0]);
 		if(!na || !nb) return EMPTY;
+		if(na<LL_LIMIT && nb<LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			ll cc = aa+bb;
+			return HP_llTOvec(cc);
+		}
 		if(za=='+' && zb=='-'){
 			a[0] = abs(a[0]), b[0]=abs(b[0]);
 			return HP_Minus(a, b);
@@ -1235,6 +1330,14 @@ namespace grnum{
 	}
 	vi HP_Minus(vi a, vi b){
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]);
+		int na = abs(a[0]), nb = abs(b[0]);
+		if(!na || !nb) return EMPTY;
+		if(na<LL_LIMIT && nb<LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			ll cc = aa-bb;
+			return HP_llTOvec(cc);
+		}
 	    if(za=='+' && zb=='-'){
 	        a[0] = abs(a[0]), b[0]=abs(b[0]);
 	        return HP_Plus(a, b);
@@ -1267,14 +1370,14 @@ namespace grnum{
 	        return a;
 	    }
 	}
-	vi HP_Karatsuba(int n, vi a, vi b){
+	void HP_Karatsuba(int n, const vi& a, const vi& b, vi& c){
 	    int i, j;
-	    vi c(n+n+5, 0);
+	    c.resize(n+n+5, 0);
 	    if(n < KAR_LIMIT){
 	        for(i=1; i<=n; i++)
 	            for(j=1; j<=n; j++)
 	                c[i+j-1] += a[i]*b[j];
-	        return c;
+	        return;
 	    }
 
 	    int m = n>>1;
@@ -1283,18 +1386,13 @@ namespace grnum{
 	        aa[i] = a[m+i];
 	        bb[i] = b[m+i];
 	    }
-	    vi z2 = HP_Karatsuba(n-m, aa, bb);
-	    vi z0 = HP_Karatsuba(m, a, b);
-	    vi as(n-m+5, 0), bs(n-m+5, 0);
-	    for(i=1; i<=n-m; i++){
-	        as[i] = a[i+m];
-	        bs[i] = b[i+m];
-	        if(i <= m) {
-	            as[i] += a[i];
-	            bs[i] += b[i];
-	        }
+	    vi z2; HP_Karatsuba(n-m, aa, bb, z2);
+	    vi z0; HP_Karatsuba(m, a, b, z0);
+	    for(i=1; i<=m; i++){
+            aa[i] += a[i];
+            bb[i] += b[i];
 	    }
-	    vi z1 = HP_Karatsuba(n-m, as, bs);
+	    vi z1; HP_Karatsuba(n-m, aa, bb, z1);
 
 	    for(i=1; i<=((n-m)<<1); i++){
 	        z1[i] -= z2[i];
@@ -1304,7 +1402,7 @@ namespace grnum{
 	    for(i=1; i<=((n-m)<<1); i++) c[i+m+m] += z2[i];
 	    for(i=1; i<=((n-m)<<1); i++) c[i+m] += z1[i];
 	    for(i=1; i<=(m<<1); i++) c[i] += z0[i];
-	    return c;
+	    return;
 	}
 	vi HP_SimMul(vi a, vi b){
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]);
@@ -1329,12 +1427,18 @@ namespace grnum{
 	    char zc = signINmul(za, zb);
 	    int na=abs(a[0]), nb=abs(b[0]);
 		if(!na || !nb) return EMPTY;
+		if(na+nb < LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			ll cc = aa*bb;
+			return HP_llTOvec(cc);
+		}
 	    int nc = na+nb;
 	    a.resize(nc+1, 0);
 	    b.resize(nc+1, 0);
 	    if(na<KAR_LIMIT || nb<KAR_LIMIT) return HP_SimMul(a, b);
 	    if(na<sqrt(nb) || nb<sqrt(na)) return HP_SimMul(a, b);
-	    vi c = HP_Karatsuba(nc, a, b);
+	    vi c(1, 0); HP_Karatsuba(nc, a, b, c);
 	    int limit = c.size()-1;
 	    for(int i=1; i<limit; i++){
 	        c[i+1] += c[i]/JW, c[i] %= JW;
@@ -1363,6 +1467,12 @@ namespace grnum{
 	    int na=abs(a[0]), nb=abs(b[0]);
 		if(!na || !nb) return EMPTY;
 		if(na < nb) return ZERO;
+		if(na<LL_LIMIT && nb<LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			ll cc = aa/bb;
+			return HP_llTOvec(cc);
+		}
 	    int nc = na-nb+5;
 		vi c(1, 0);
 	    AllResize(nc+5, a, b, c);
@@ -1394,6 +1504,12 @@ namespace grnum{
 	    int na=abs(a[0]), nb=abs(b[0]);
 		if(!na || !nb) return EMPTY;
 		if(na < nb) return a;
+		if(na<LL_LIMIT && nb<LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			ll cc = aa%bb;
+			return HP_llTOvec(cc);
+		}
 	    int nc = na-nb+5;
 	    a.resize(nc+5), b.resize(nc+5);
 	    int i, j;
@@ -1447,12 +1563,12 @@ namespace grnum{
 		//sign storage
 		nb++;
 		if(sign > 0) b.push_back(0);
-		else b.push_back(1);
+		else b.push_back(BIT_JW-1);
 		if(sign < 0){
 			//取补码
 			//Two's Complement
 			int i;
-			for(i=1; i<=nb; i++) b[i] = b[i]^(BIT_JW-1);
+			for(i=1; i<nb; i++) b[i] = b[i]^(BIT_JW-1);
 			b[1]++;
 			for(i=1; i<=nb; i++){
 				b[i+1] += b[i]>>10;
@@ -1465,6 +1581,7 @@ namespace grnum{
 	vi HP_BitTOThou(vi a){
 		int na = a[0];
 		int sign = a[na] ? -1 : 1;
+		a[na] = 0;
 		if(sign == -1){
 			a[1]--;
 			int i;
@@ -1474,8 +1591,7 @@ namespace grnum{
 					a[i+1]--;
 				}
 			}
-			while(na>1 && !a[na]) na--;
-			for(i=1; i<=na; i++) a[i] = a[i]^(BIT_JW-1);
+			for(i=1; i<na; i++) a[i] = a[i]^(BIT_JW-1);
 		}
 		while(na>1 && !a[na]) na--;
 
@@ -1488,11 +1604,11 @@ namespace grnum{
 		b[0] *= sign;
 		return b;
 	}
-	void HP_BitSetLen(vi& a, int nc){
+	void HP_BitLenSet(vi& a, int nc){
 		int na = a[0], signa = a[na] ? -1 : 1;
-		a[na] = 0^(signa>0 ? 0 : BIT_JW-1);
-		a.resize(nc+2, 0^(signa>0 ? 0 : BIT_JW-1));
-		a[nc] = signa>0 ? 0 : (1^(BIT_JW-1));
+		a.resize(nc+2, signa>0 ? 0 : BIT_JW-1);
+		a[nc] = signa>0 ? 0 : (BIT_JW-1);
+		a[0] = nc;
 	}
 	vi HP_BitAnd(vi a, vi b){
 		int na = a[0], nb = b[0];
@@ -1502,8 +1618,8 @@ namespace grnum{
 		
 		//长度统一为nc+1
 		//unify lengths to nc+1
-		HP_BitSetLen(a, nc);
-		HP_BitSetLen(b, nc);
+		HP_BitLenSet(a, nc);
+		HP_BitLenSet(b, nc);
 
 		for(i=1; i<=nc; i++) c[i] = a[i]&b[i];
 		c[0] = nc;
@@ -1518,8 +1634,8 @@ namespace grnum{
 		
 		//长度统一为nc+1
 		//unify lengths to nc+1
-		HP_BitSetLen(a, nc);
-		HP_BitSetLen(b, nc);
+		HP_BitLenSet(a, nc);
+		HP_BitLenSet(b, nc);
 		
 		for(i=1; i<=nc; i++) c[i] = a[i]|b[i];
 		c[0] = nc;
@@ -1534,8 +1650,8 @@ namespace grnum{
 		
 		//长度统一为nc+1
 		//unify lengths to nc+1
-		HP_BitSetLen(a, nc);
-		HP_BitSetLen(b, nc);
+		HP_BitLenSet(a, nc);
+		HP_BitLenSet(b, nc);
 		
 		for(i=1; i<=nc; i++) c[i] = a[i]^b[i];
 		c[0] = nc;
@@ -1582,13 +1698,16 @@ namespace grnum{
 		return HP(a);
 	}
 	int putHP(const HP& cbi){
-		vi c = HP_unzip(cbi.num);
+		vi c = cbi.num;
 		if(HP_IsZERO(c)) c[0] = 1;
 		char zc = intTOsign(c[0]);
 		if(zc == '-') putchar('-');
 		int nc = abs(c[0]);
 		if(!nc) return 1;//EMPTY
-		for(; nc; nc--) putchar(c[nc]+48);
+		for(; nc; nc--){
+			if(nc == abs(c[0])) printf("%d", c[nc]);
+			else printf("%03d", c[nc]);
+		}
 		return 0;//无错误 nothing is wrong
 	}
 	int putsHP(const HP& cbi){

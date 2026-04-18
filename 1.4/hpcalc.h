@@ -189,7 +189,7 @@ namespace grnum{
 	std::once_flag FirstInit;
 	//第一次执行构造函数时初始化全局变量
 	//Initialize global variables on first constructor execution
-	void init(){
+	inline void init(){
 		ONE[1] = ONE[0] = 1;
 		M_ONE[0] = -1, M_ONE[1] = 1;
 		ZERO[0] = 1;
@@ -199,53 +199,53 @@ namespace grnum{
 	}
 
 	//数相关函数 functions about numbers
-	int max(int x, int y) {return x>y ? x : y;}
-	int min(int x, int y) {return x<y ? x : y;}
-	int abs(int x) {return x>0 ? x : -x;}
-	void swap(int &x, int &y) {int t = x; x = y, y = t;}
-	int intTOone(int x) {return x>0 ? 1 : -1;}
+	inline ll max(ll x, ll y) {return x>y ? x : y;}
+	inline ll min(ll x, ll y) {return x<y ? x : y;}
+	inline ll abs(ll x) {return x>0 ? x : -x;}
+	inline void swap(int &x, int &y) {int t = x; x = y, y = t;}
+	inline int intTOone(ll x) {return x>0 ? 1 : -1;}
 
 	//字符相关函数 functions about characters
-	char PosiNega(char x) {return x=='+' ? '-' : '+';}
-	char signINmul(char x, char y) {return x==y ? '+' : '-';}
-	char IsDigit(char t) {return t>='0' && t<='9';}// 是数字
-	char IsSign(char t) {return t=='+' || t=='-';}// 是正负号
-	char IsOpe(char x){//是运算符
+	inline char PosiNega(char x) {return x=='+' ? '-' : '+';}
+	inline char signINmul(char x, char y) {return x==y ? '+' : '-';}
+	inline bool IsDigit(char t) {return t>='0' && t<='9';}// 是数字
+	inline bool IsSign(char t) {return t=='+' || t=='-';}// 是正负号
+	inline bool IsOpe(char x){//是运算符
 	    for(auto ch : Ope)
 	        if(ch && ch==x) return 1;
 	    return 0;
 	}
 
 	//数和符号转换函数 functions about converting of numbers and characters
-	char intTOsign(int x) {return x>=0 ? '+' : '-';}
-	char llTOsign(ll x) {return x>=0 ? '+' : '-';}
-	char signTOint(char x) {return x=='+' ? 1 : -1;}
+	inline char intTOsign(int x) {return x>=0 ? '+' : '-';}
+	inline char llTOsign(ll x) {return x>=0 ? '+' : '-';}
+	inline char signTOint(char x) {return x=='+' ? 1 : -1;}
 
 	//vector相关函数 functions about vector
-	char HP_IsZERO(const vi& a) {return abs(a[0])==1 && !a[1];}//是0 Checks if the value is 0
-	char HP_IsONE(const vi& a) {return a[0]==1 && a[1]==1;}//是1 Checks if the value is 1
-	char HP_IsM_ONE(const vi& a) {return a[0]==-1 && a[1]==1;}//是-1 Checks if the value is -1
-	void VecSwap(vi &a, vi &b) {a.swap(b);}
-	void HP_PopFrontZero(vi &a){
+	inline bool HP_IsZERO(const vi& a) {return abs(a[0])==1 && !a[1];}//是0 Checks if the value is 0
+	inline bool HP_IsONE(const vi& a) {return a[0]==1 && a[1]==1;}//是1 Checks if the value is 1
+	inline bool HP_IsM_ONE(const vi& a) {return a[0]==-1 && a[1]==1;}//是-1 Checks if the value is -1
+	inline void VecSwap(vi &a, vi &b) {a.swap(b);}
+	inline void HP_PopFrontZero(vi &a){
         int n = abs(a[0]);
         int f = a[0] > 0 ? 1 : -1;
         while(n>1 && a[n]==0) n--;
         a[0] = n*f;
         a.resize(n+3, 0);
 	}//去除前导零 Remove leading zeros
-	short HP_VecCmp(const vi& a, const vi& b){
+	inline short HP_VecCmp(const vi& a, const vi& b){
         int na=abs(a[0]), nb=abs(b[0]), i;
         if(na != nb) return na>nb ? 1 : -1;
         for(i=na; i>0; i--)
             if(a[i] != b[i]) return a[i]>b[i] ? 1 : -1;
         return 0;
 	}//无符号整数比较大小 Compare unsigned integers
-	void HP_reverse(vi &a){
+	inline void HP_reverse(vi &a){
 	    int n = abs(a[0]), i;
 	    for(i=1; i+i<=n; i++)
 	        swap(a[i], a[n-i+1]);
 	}//倒序存储 Reverse the vector storage
-	vi HP_zip(vi a){//十进制压为千进制 Compress decimal to thousand-based
+	inline vi HP_zip(vi a){//十进制压为千进制 Compress decimal to thousand-based
 	    int f = a[0]>0 ? 1 : -1, n = abs(a[0]), i;
 	    a.resize(n+5, 0);
 	    int nb = (n+2)/3;
@@ -256,7 +256,7 @@ namespace grnum{
 	    HP_PopFrontZero(b);
 	    return b;
 	}
-	vi HP_unzip(vi a){
+	inline vi HP_unzip(vi a){
 	    int f = a[0]>0 ? 1 : -1, n = abs(a[0]), i;
 	    a.resize(n+5, 0);
 	    int nb = (n<<1)+n;//n*3
@@ -270,13 +270,13 @@ namespace grnum{
 	    HP_PopFrontZero(b);
 	    return b;
 	}//千进制解压为十进制 Decompress thousand-based to decimal
-	ll HP_vecTOll(const vi& b){
+	inline ll HP_vecTOll(const vi& b){
 	    ll ans = 0; int nb = abs(b[0]);
 		if(nb > 5) return 0;//可能溢出
 	    while(nb) ans = ans*JW+b[nb--];
 	    return ans;
 	}//高精度转为ll    Convert HP to long long
-	vi HP_intTOvec(int ai){
+	inline vi HP_intTOvec(int ai){
 		if(!ai) return ZERO;
 		vi b(1, 0);
 		int nb = 0;
@@ -289,7 +289,7 @@ namespace grnum{
 		b[0] = nb*sign;
 		return b;
 	}
-	vi HP_llTOvec(ll ai){
+	inline vi HP_llTOvec(ll ai){
 		if(!ai) return ZERO;
 		vi b(1, 0);
 		int nb = 0;
@@ -302,13 +302,13 @@ namespace grnum{
 		b[0] = nb*sign;
 		return b;
 	}
-	char HP_NumCheck(const vi& a){
+	inline bool HP_NumCheck(const vi& a){
 		int na = abs(a[0]);
 		for(; na; na--)
 			if(a[na] < 0) return 1;
 		return 0;
 	}//合法:0 不合法:1    Valid:0 Invalid:1
-	void putvec(const vi& c){
+	inline void putvec(const vi& c){
 		for(auto i : c) printf("%d ", i);
 		puts("");
 	}//调试用 used to debug
@@ -318,9 +318,6 @@ namespace grnum{
 	vi HP_Plus(vi a, vi b);
 	vi HP_Minus(vi a, vi b);
 	vi HP_Multiply(vi a, vi b);
-	void HP_Karatsuba(int n, const vi& a, const vi& b, vi& c);
-	vi HP_SimMul(vi a, vi b);
-	char HP_DivCmp(int r, int n, vi &a, vi &b);
 	vi HP_Divide(vi a, vi b);
 	vi HP_Power(vi a, ll b);
 	vi HP_Module(vi a, vi b);
@@ -561,6 +558,7 @@ namespace grnum{
 			}
 			int SetDigit(int p, int y){
 				if(num[0] == 0) return 1;
+				if(p < 0) return 1;
 				int i = (p+2)/3, j = p-i*3+3;
 				if(i > abs(num[0])) return 1;
 				if(y<0 || y>9) return 1;
@@ -1287,13 +1285,10 @@ namespace grnum{
 
 	//从我的GreatCalculator搬来的高精度计算函数
 	//High-precision functions adapted from my GreatCalculator
-	void AllResize(int n, vi &a, vi &b, vi &c){
-		a.resize(n), b.resize(n), c.resize(n);
-		a[0] = intTOone(a[0])*n;
-		b[0] = intTOone(b[0])*n;
-		c[0] = intTOone(c[0])*n;
-	}//运算之前统一长度防止指针越界
-	//Unify lengths before operations to prevent index out of bounds
+	inline int get(const vi& a, int i){
+		if(i>0 && i<=abs(a[0])) return a[i];
+		else return 0;
+	}
 	vi HP_Plus(vi a, vi b){
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]), zc;
 	    int na=abs(a[0]), nb=abs(b[0]);
@@ -1316,10 +1311,9 @@ namespace grnum{
 	    else{
 			if(za=='-' && zb=='-') zc = '-';//(-a)+(-b)=-(a+b)
 			else zc = '+';
-			int nc = max(na, nb); vi c(1, 0);
-			AllResize(nc+5, a, b, c);
+			int nc = max(na, nb); vi c(nc+5, 0);
 			for(int i=1; i<=nc; i++){
-				c[i] += a[i]+b[i];
+				c[i] += get(a, i)+get(b, i);
 				c[i+1] += c[i]/JW, c[i] %= JW;
 			}
 			if(c[nc+1]) nc++;
@@ -1359,9 +1353,8 @@ namespace grnum{
 	        }
 	        int na=abs(a[0]), nb=abs(b[0]), i;
 			if(!na || !nb) return EMPTY;
-	        a.resize(na+5), b.resize(na+5);
 	        for(i=1; i<=na; i++){
-	            a[i] -= b[i];
+	            a[i] -= get(b, i);
 	            if(a[i] < 0) a[i]+=JW, a[i+1]--;
 	        }
 	        a[0] = na*signTOint(zc);
@@ -1409,8 +1402,8 @@ namespace grnum{
 	    char zc = signINmul(za, zb);
 	    int na=abs(a[0]), nb=abs(b[0]);
 	    int nc = na+nb, i, j;
-	    a.resize(nc+1, 0);
-	    b.resize(nc+1, 0);
+	    // a.resize(nc+1, 0);
+	    // b.resize(nc+1, 0);
 	    vi c(nc+5, 0);
 	    for(i=1; i<=na; i++)
 	        for(j=1; j<=nb; j++)
@@ -1452,7 +1445,7 @@ namespace grnum{
 	    return c;
 	}//感谢星星老师和Gemini帮忙调试乘法算法!
 	 //Thanks to Teacher Stars and Gemini for helping debug the multiplication algorithm!
-	char HP_DivCmp(int r, int n, vi &a, vi &b){
+	char HP_DivCmp(int r, int n, const vi &a, const vi &b){
 	    if(a[r+n] > 0) return true;
 	    if(a[r+n] < 0) return false;
 	    for(int i=n; i>0; i--){
@@ -1460,6 +1453,13 @@ namespace grnum{
 	        if(a[r+i-1] < b[i]) return false;
 	    }
 	    return true;
+	}
+	inline int HP_DivEst(const vi& a, const vi& b, int r, int nb){
+		int a1 = get(a, r+nb-1);
+		int b1 = get(b, nb), b2 = get(b, nb-1);
+		int aa = a1*JW;
+		int bb = b1*JW + b2;
+		return aa / bb;
 	}
 	vi HP_Divide(vi a, vi b){
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]);
@@ -1474,10 +1474,34 @@ namespace grnum{
 			return HP_llTOvec(cc);
 		}
 	    int nc = na-nb+5;
-		vi c(1, 0);
-	    AllResize(nc+5, a, b, c);
-	    int i, j;
+		vi c(nc+5, 0);
+		a.resize(nc+5, 0), b.resize(nc+5, 0);
+//	    AllResize(nc+5, a, b, c);
+	    int i, j, q, t;
 	    for(i=na-nb+1; i>0; i--){
+			q = HP_DivEst(a, b, i, nb);
+			if(q > 0){
+				for(j=1; j<=nb; j++){
+					a[i+j-1] -= b[j]*q;
+					if(a[i+j-1] < 0){
+						t = (-a[i+j-1]+JW-1) / JW;
+						a[i+j-1] += t*JW;
+						a[i+j] -= t;
+					}
+				}
+				c[i] += q;
+			}
+			while(!HP_DivCmp(i, nb, a, b)){
+	            // 估高了，加回一个除数
+	            for(j=1; j<=nb; j++){
+	                a[i+j-1] += b[j];
+	                if(a[i+j-1] >= JW){
+	                    a[i+j-1] -= JW;
+	                    a[i+j]++;
+	                }
+	            }
+	            c[i]--;
+       		}
 	        while(HP_DivCmp(i, nb, a, b)){
 	            for(j=1; j<=nb; j++){
 	                a[i+j-1] -= b[j];
@@ -1512,8 +1536,29 @@ namespace grnum{
 		}
 	    int nc = na-nb+5;
 	    a.resize(nc+5), b.resize(nc+5);
-	    int i, j;
+	    int i, j, q, t;
 	    for(i=na-nb+1; i>0; i--){
+			q = HP_DivEst(a, b, i, nb);
+			if(q > 0){
+				for(j=1; j<=nb; j++){
+					a[i+j-1] -= b[j]*q;
+					if(a[i+j-1] < 0){
+						t = (-a[i+j-1]+JW-1) / JW;
+						a[i+j-1] += t*JW;
+						a[i+j] -= t;
+					}
+				}
+			}
+			while(!HP_DivCmp(i, nb, a, b)){
+	            // 估高了，加回一个除数
+	            for(j=1; j<=nb; j++){
+	                a[i+j-1] += b[j];
+	                if(a[i+j-1] >= JW){
+	                    a[i+j-1] -= JW;
+	                    a[i+j]++;
+	                }
+	            }
+       		}
 	        while(HP_DivCmp(i, nb, a, b)){
 	            for(j=1; j<=nb; j++){
 	                a[i+j-1] -= b[j];

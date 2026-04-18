@@ -3,7 +3,7 @@
 
 ![GitHub Stars](https://img.shields.io/github/stars/rylTianChen/hpcalc?style=social)
 ![GitHub Forks](https://img.shields.io/github/forks/rylTianChen/hpcalc?style=social)
-![C++14](https://img.shields.io/badge/Language-C%2B%2B11-blue)
+![C++14](https://img.shields.io/badge/Language-C%2B%2B14-blue)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux-lightgray)
 ![Single File](https://img.shields.io/badge/Single%20File-%E2%9C%94-brightgreen)
 ![Karatsuba](https://img.shields.io/badge/Karatsuba-Multiplication-orange)

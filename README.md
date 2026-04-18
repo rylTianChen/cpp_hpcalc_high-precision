@@ -25,16 +25,24 @@ hpcalc 是**纯手写、单文件、无任何依赖**的高精度有符号整数
 
 ## 🚀 快速示例
 ```cpp
-#include <iostream>
-#include "hpcalc.h"
+#include<iostream>
+#include"hpcalc.h"
 using namespace grnum;
-
-int main() {
-    HP a = 2;
-    HP b = 200000;
-    HP c = HP_pow(a, b);
-
-    std::cout << "位数：" << c.length() << std::endl;
-    std::cout << c << std::endl;
-    return 0;
+HP a, b, c;
+char op;
+int main(){
+	while(1){
+		std::cin >> a >> op >> b;
+		c.clear();
+		if(op == '+') c = a+b;
+		if(op == '-') c = a-b;
+		if(op == '*') c = a*b;
+		if(op == '/') c = a/b;
+		if(op == '^') c = HP_pow(a, b);
+		if(op == '%') c = a%b;
+		if(c.isEMPTY()) puts("Error");
+		else putsHP(c);
+	}
+	return 0;
 }
+```

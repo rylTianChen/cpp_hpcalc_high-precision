@@ -1,9 +1,9 @@
 # hpcalc
 🔥 单文件纯 C++ 高精度大整数库 | 有符号整数 | 运算符重载 | Karatsuba 乘法
 
-hpcalc.h内部提供详细中文使用说明
+**hpcalc.h内部提供详细中文使用说明**
 
-detailed instructions provided inside hpcalc.h
+**detailed instructions provided inside hpcalc.h**
 
 ![GitHub Stars](https://img.shields.io/github/stars/rylTianChen/cpp_hpcalc_high-precision?style=social)
 ![GitHub Forks](https://img.shields.io/github/forks/rylTianChen/cpp_hpcalc_high-precision?style=social)

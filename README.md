@@ -1,7 +1,7 @@
 # hpcalc
 🔥 单文件纯 C++ 高精度大整数库 | 有符号整数 | 运算符重载 | Karatsuba 乘法
 
-🔥 single file C++ only high-precision bigint lib | signed int | overloaded operators | Karatsuba Multiply
+🔥 Single-file C++ high-precision big integer library with arithmetic, bitwise operations, operator overloading, and Karatsuba multiplication.
 
 **hpcalc.h内部提供详细中文使用说明**
 

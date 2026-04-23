@@ -150,113 +150,104 @@ int main(){
 }
 */
 
-#ifndef GRNUM_DEF_H
-#define GRNUM_DEF_H 1031149997108990
-//猜猜GRNUM_DEF_H有什么意思。
-//Guess what does GRNUM_DEF_H means.
+#ifndef HPCALC_H
+#define HPCALC_H 1031149997108990
+//猜猜HPCALC_H有什么意思。
+//Guess what does HPCALC_H means.
 
 #include<vector>
 #include<string>
 #include<iostream>
 #include<cmath>
 #include<cstring>
-#include<mutex>
 
 namespace grnum{
 	typedef std::vector<int> vi;
 	typedef std::string str;
 	typedef long long ll;
 
-	const char Ope[] = "*/^%";//运算符 operator
-	const int JW = 1000;//千进制 base-1000 storage
-	const int BIT_JW = 1024;
+	static const char Ope[] = "*/^%";//运算符 operator
+	static const int JW = 1000;//千进制 base-1000 storage
+	static const int BIT_JW = 1024;
 	//1024进制，用于位运算
 	//base-1024 storage, used in bitwise calculation
-	const int KAR_LIMIT = 64;
+	static const int KAR_LIMIT = 64;
 	//使用Karatsuba算法的长度最小值
 	//Mininum length for using Karatsuba
-	const int LEN_LIMIT = 1e8;
-	const int LL_LIMIT = 6;
-	const int MAX_INT = 2147483647, MIN_INT = -2147483648;
-	const ll MAX_LL =  9223372036854775807ll, MIN_LL = -9223372036854775807ll-1;
-	const int INT_LEN = 9, LL_LEN = 18;
-
-	vi EMPTY(1, 0);//Error时返回值 error indicator
+	static const int LEN_LIMIT = 1e8;
+	static const int LL_LIMIT = 6;
+	static const int MAX_INT = 2147483647, MIN_INT = -2147483648;
+	static const ll MAX_LL =  9223372036854775807ll, MIN_LL = -9223372036854775807ll-1;
+	static const int INT_LEN = 9, LL_LEN = 18;
+	
+	static const vi EMPTY = {0};//Error返回值 error indicator
 	//EMPTY特征: EMPTY[0] = 0    Feature of EMPTY: EMPTY[0] = 0
-	vi ONE(2, 0), M_ONE(2, 0), ZERO(2, 0);//1 -1 0
-	vi BI(3, 0);//1024
-	vi 	TWO(2, 0), TEN(2, 0);//2 10
-	std::once_flag FirstInit;
-	//第一次执行构造函数时初始化全局变量
-	//Initialize global variables on first constructor execution
-	inline void init(){
-		ONE[1] = ONE[0] = 1;
-		M_ONE[0] = -1, M_ONE[1] = 1;
-		ZERO[0] = 1;
-		BI[0] = 2, BI[1] = 24, BI[2] = 1;
-		TWO[0] = 1, TWO[1] = 2;
-		TEN[0] = 1, TEN[1] = 10;
-	}
+	static const vi ONE = {1, 1}, M_ONE = {-1, 1}, ZERO = {1, 0};
+	static const vi BI = {2, 24, 1};
+	static const vi TWO = {1, 2}, TEN = {1, 10};
 
 	//数相关函数 functions about numbers
-	inline ll max(ll x, ll y) {return x>y ? x : y;}
-	inline ll min(ll x, ll y) {return x<y ? x : y;}
-	inline ll abs(ll x) {return x>0 ? x : -x;}
-	inline void swap(int &x, int &y) {int t = x; x = y, y = t;}
-	inline int intTOone(ll x) {return x>0 ? 1 : -1;}
+	static inline ll max(ll x, ll y) {return x>y ? x : y;}
+	static inline ll min(ll x, ll y) {return x<y ? x : y;}
+	static inline ll abs(ll x) {return x>0 ? x : -x;}
+	static inline void swap(int &x, int &y) {int t = x; x = y, y = t;}
+	static inline int intTOone(ll x) {return x>0 ? 1 : -1;}
 
 	//字符相关函数 functions about characters
-	inline char PosiNega(char x) {return x=='+' ? '-' : '+';}
-	inline char signINmul(char x, char y) {return x==y ? '+' : '-';}
-	inline bool IsDigit(char t) {return t>='0' && t<='9';}// 是数字
-	inline bool IsSign(char t) {return t=='+' || t=='-';}// 是正负号
-	inline bool IsOpe(char x){//是运算符
+	static inline char PosiNega(char x) {return x=='+' ? '-' : '+';}
+	static inline char signINmul(char x, char y) {return x==y ? '+' : '-';}
+	static inline bool IsDigit(char t) {return t>='0' && t<='9';}// 是数字
+	static inline bool IsSign(char t) {return t=='+' || t=='-';}// 是正负号
+	static inline bool IsOpe(char x){//是运算符
 	    for(auto ch : Ope)
 	        if(ch && ch==x) return 1;
 	    return 0;
 	}
 
 	//数和符号转换函数 functions about converting of numbers and characters
-	inline char intTOsign(int x) {return x>=0 ? '+' : '-';}
-	inline char llTOsign(ll x) {return x>=0 ? '+' : '-';}
-	inline char signTOint(char x) {return x=='+' ? 1 : -1;}
+	static inline char intTOsign(int x) {return x>=0 ? '+' : '-';}
+	static inline char llTOsign(ll x) {return x>=0 ? '+' : '-';}
+	static inline char signTOint(char x) {return x=='+' ? 1 : -1;}
 
 	//vector相关函数 functions about vector
-	inline bool HP_IsZERO(const vi& a) {return abs(a[0])==1 && !a[1];}//是0 Checks if the value is 0
-	inline bool HP_IsONE(const vi& a) {return a[0]==1 && a[1]==1;}//是1 Checks if the value is 1
-	inline bool HP_IsM_ONE(const vi& a) {return a[0]==-1 && a[1]==1;}//是-1 Checks if the value is -1
-	inline void VecSwap(vi &a, vi &b) {a.swap(b);}
-	inline void HP_PopFrontZero(vi &a){
+	static inline bool HP_IsZERO(const vi& a) {return abs(a[0])==1 && !a[1];}//是0 Checks if the value is 0
+	static inline bool HP_IsONE(const vi& a) {return a[0]==1 && a[1]==1;}//是1 Checks if the value is 1
+	static inline bool HP_IsM_ONE(const vi& a) {return a[0]==-1 && a[1]==1;}//是-1 Checks if the value is -1
+	static inline void VecSwap(vi &a, vi &b) {a.swap(b);}
+	static inline void HP_PopFrontZero(vi &a){
         int n = abs(a[0]);
         int f = a[0] > 0 ? 1 : -1;
         while(n>1 && a[n]==0) n--;
         a[0] = n*f;
         a.resize(n+3, 0);
 	}//去除前导零 Remove leading zeros
-	inline short HP_VecCmp(const vi& a, const vi& b){
+	static inline short HP_VecCmp(const vi& a, const vi& b){
         int na=abs(a[0]), nb=abs(b[0]), i;
         if(na != nb) return na>nb ? 1 : -1;
         for(i=na; i>0; i--)
             if(a[i] != b[i]) return a[i]>b[i] ? 1 : -1;
         return 0;
 	}//无符号整数比较大小 Compare unsigned integers
-	inline void HP_reverse(vi &a){
+	static inline void HP_reverse(vi &a){
 	    int n = abs(a[0]), i;
 	    for(i=1; i+i<=n; i++)
 	        swap(a[i], a[n-i+1]);
 	}//倒序存储 Reverse the vector storage
-	inline vi HP_zip(vi a){//十进制压为千进制 Compress decimal to thousand-based
+	static inline int get(const vi& a, int i){
+		if(i>0 && i<=abs(a[0])) return a[i];
+		else return 0;
+	}
+	static inline vi HP_zip(const vi& a){//十进制压为千进制 Compress decimal to thousand-based
 	    int f = a[0]>0 ? 1 : -1, n = abs(a[0]), i;
-	    a.resize(n+5, 0);
 	    int nb = (n+2)/3;
 	    vi b(nb+5, 0);
 	    for(i=1; i<=n; i+=3)
-			b[i/3+1] = a[i+2]*100+a[i+1]*10+a[i];
+			b[i/3+1] = get(a, i+2)*100+get(a, i+1)*10+get(a, i);
 	    b[0] = f*nb;
 	    HP_PopFrontZero(b);
 	    return b;
 	}
-	inline vi HP_unzip(vi a){
+	static inline vi HP_unzip(vi a){
 	    int f = a[0]>0 ? 1 : -1, n = abs(a[0]), i;
 	    a.resize(n+5, 0);
 	    int nb = (n<<1)+n;//n*3
@@ -270,13 +261,13 @@ namespace grnum{
 	    HP_PopFrontZero(b);
 	    return b;
 	}//千进制解压为十进制 Decompress thousand-based to decimal
-	inline ll HP_vecTOll(const vi& b){
+	static inline ll HP_vecTOll(const vi& b){
 	    ll ans = 0; int nb = abs(b[0]);
 		if(nb > 5) return 0;//可能溢出
 	    while(nb) ans = ans*JW+b[nb--];
 	    return ans;
 	}//高精度转为ll    Convert HP to long long
-	inline vi HP_intTOvec(int ai){
+	static inline vi HP_intTOvec(int ai){
 		if(!ai) return ZERO;
 		vi b(1, 0);
 		int nb = 0;
@@ -289,7 +280,7 @@ namespace grnum{
 		b[0] = nb*sign;
 		return b;
 	}
-	inline vi HP_llTOvec(ll ai){
+	static inline vi HP_llTOvec(ll ai){
 		if(!ai) return ZERO;
 		vi b(1, 0);
 		int nb = 0;
@@ -302,34 +293,43 @@ namespace grnum{
 		b[0] = nb*sign;
 		return b;
 	}
-	inline bool HP_NumCheck(const vi& a){
+	static inline bool HP_NumCheck(const vi& a){
 		int na = abs(a[0]);
 		for(; na; na--)
 			if(a[na] < 0) return 1;
 		return 0;
 	}//合法:0 不合法:1    Valid:0 Invalid:1
-	inline void putvec(const vi& c){
+	static inline void putvec(const vi& c){
 		for(auto i : c) printf("%d ", i);
 		puts("");
 	}//调试用 used to debug
 
 	//高精度计算函数声明
 	//Declarations of HP calculation functions
-	vi HP_Plus(vi a, vi b);
-	vi HP_Minus(vi a, vi b);
-	vi HP_Multiply(vi a, vi b);
-	vi HP_Divide(vi a, vi b);
-	vi HP_Power(vi a, ll b);
-	vi HP_Module(vi a, vi b);
+	static vi HP_Plus(vi a, vi b);
+	static vi HP_Minus(vi a, vi b);
+	static vi HP_Multiply(vi a, vi b);
+	static vi HP_Divide(vi a, vi b);
+	static vi HP_Power(vi a, ll b);
+	static vi HP_Module(vi a, vi b);
 
 	//高精度位运算函数声明
 	//Declarations of HP bitwise functions
-	vi HP_ThouTOBit(vi a);
-	vi HP_BitTOThou(vi a);
-	vi HP_BitAnd(vi a, vi b);
-	vi HP_BitOr(vi a, vi b);
-	vi HP_BitXor(vi a, vi b);
-	vi HP_BitNot(vi a);
+	static vi HP_ThouTOBit(vi a);
+	static vi HP_BitTOThou(vi a);
+	static vi HP_BitAnd(vi a, vi b);
+	static vi HP_BitOr(vi a, vi b);
+	static vi HP_BitXor(vi a, vi b);
+	static vi HP_BitNot(vi a);
+	
+	//高精度比较运算函数声明
+	//Declarations of HP comparison functions
+	static bool HP_gtr(const vi& a, const vi& b);
+	static bool HP_geq(const vi& a, const vi& b);
+	static bool HP_lss(const vi& a, const vi& b);
+	static bool HP_leq(const vi& a, const vi& b);
+	static bool HP_equ(const vi& a, const vi& b);
+	static bool HP_neq(const vi& a, const vi& b);
 
 	class HP{
 		private:
@@ -377,7 +377,6 @@ namespace grnum{
 				num.push_back(0);
 				//num = ZERO
 				BitIsLatest = 0;
-				std::call_once(FirstInit, init);
 			}
 			HP(int xi){
 				num.clear(), num.push_back(0);
@@ -397,7 +396,6 @@ namespace grnum{
 				num[0] = signTOint(z)*n;
 				num = HP_zip(num);
 				BitIsLatest = 0;
-				std::call_once(FirstInit, init);
 			}
 			HP(ll xi){
 				num.clear(), num.push_back(0);
@@ -417,12 +415,10 @@ namespace grnum{
 				num[0] = signTOint(z)*n;
 				num = HP_zip(num);
 				BitIsLatest = 0;
-				std::call_once(FirstInit, init);
 			}
 			HP(const vi& v){
 				num = v;
 				BitIsLatest = 0;
-				std::call_once(FirstInit, init);
 			}
 			HP(const str& s){
 				num.clear(), num.push_back(0);
@@ -452,7 +448,6 @@ namespace grnum{
 					num.shrink_to_fit();
 				}
 				BitIsLatest = 0;
-				std::call_once(FirstInit, init);
 			}
 			HP(const char *p){
 				num.clear(), num.push_back(0);
@@ -483,36 +478,38 @@ namespace grnum{
 					num.shrink_to_fit();
 				}
 				BitIsLatest = 0;
-				std::call_once(FirstInit, init);
 			}
 
 			//析构函数 Destructor
-			~HP() {num.clear(); num.shrink_to_fit();}
+			~HP(){
+				num.clear(); num.shrink_to_fit();
+				bit.clear(); bit.shrink_to_fit();
+			}
 
-			bool isEMPTY() const {return num[0] == 0;}
+			inline bool isEMPTY() const {return num[0] == 0;}
 			//是否为错误值 Checks if it is the empty (error) value
-    		void clear() {num.clear(), num.push_back(0), num.shrink_to_fit();}//清空 clear
-			int length() const {
+    		inline void clear() {num.clear(), num.push_back(0), num.shrink_to_fit();}//清空 clear
+			inline int length() const {
 				int n = abs(num[0]), ret = n*3;
 				if(n == 0) return 0;
 				if(num[n] < 100) ret--;
 				if(num[n] < 10) ret--;
 				return ret;
 			}
-			int size() const {
+			inline int size() const {
 				int n = abs(num[0]), ret = n*3;
 				if(n == 0) return 0;
 				if(num[n] < 100) ret--;
 				if(num[n] < 10) ret--;
 				return ret;
 			}
-			int sign() const {
+			inline int sign() const {
 				if(num[0]==1 && num[1]==0) return 0;
 				else if(num[0] > 0) return 1;
 				else if(num[0] < 0) return -1;
 				else return 0;//EMPTY
 			}
-			int GetDigit(int p) const {
+			inline int GetDigit(int p) const {
 				int n = abs(num[0]);
 				if(n == 0) return 0;
 				if(p>n*3 || p<1) return 0;//越界 out of range
@@ -549,14 +546,14 @@ namespace grnum{
 				}
 				return 0;
 			}
-			void reverse(){
+			inline void reverse(){
 				if(!num[0]) return;
 				num = HP_unzip(num);
 				HP_reverse(num);
 				HP_PopFrontZero(num);
 				num = HP_zip(num);
 			}
-			int SetDigit(int p, int y){
+			inline int SetDigit(int p, int y){
 				if(num[0] == 0) return 1;
 				if(p < 0) return 1;
 				int i = (p+2)/3, j = p-i*3+3;
@@ -570,7 +567,7 @@ namespace grnum{
 				num[i] += y*q;
 				return 0;
 			}
-			int CountDigit(int x) const {
+			inline int CountDigit(int x) const {
 				if(num[0] == 0) return 0;
 				if(x<1 || x>9) return 0;
 				vi a = HP_unzip(num);
@@ -578,7 +575,7 @@ namespace grnum{
 				for(i=1; i<=n; i++) cnt += a[i]==x;
 				return cnt;
 			}
-			bool isPalindrome() const {
+			inline bool isPalindrome() const {
 				if(num[0] == 0) return false;
 				vi a = HP_unzip(num);
 				int n = abs(a[0]), i;
@@ -587,7 +584,7 @@ namespace grnum{
 				}
 				return true;
 			}
-			int RemoveDigit(int p){
+			inline int RemoveDigit(int p){
 				if(num[0] == 0) return 1;
 				num = HP_unzip(num);
 				int n = abs(num[0]), i;
@@ -746,6 +743,12 @@ namespace grnum{
 			HP operator& (HP& bbi){
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return HP(EMPTY);
+				int na = abs(a[0]), nb = abs(b[0]);
+				if(na<LL_LIMIT && nb<LL_LIMIT){
+					ll aa = HP_vecTOll(a);
+					ll bb = HP_vecTOll(b);
+					return HP(aa&bb);
+				}
 				this->BitUpdate(), bbi.BitUpdate();
 				a = this->bit, b = bbi.bit;
 				vi c = HP_BitAnd(a, b);
@@ -763,12 +766,6 @@ namespace grnum{
 				HP bbi(bi);
 				return *this & bbi;
 			}
-			friend HP operator& (HP&& abi, HP& bbi){
-				return abi & bbi;
-			}
-			friend HP operator& (HP&& abi, HP&& bbi){
-				return abi & bbi;
-			}
 			friend HP operator& (int ai, HP& bbi){
 				HP abi(ai);
 				return abi & bbi;
@@ -781,6 +778,12 @@ namespace grnum{
 			HP operator| (HP& bbi){
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return HP(EMPTY);
+				int na = abs(a[0]), nb = abs(b[0]);
+				if(na<LL_LIMIT && nb<LL_LIMIT){
+					ll aa = HP_vecTOll(a);
+					ll bb = HP_vecTOll(b);
+					return HP(aa|bb);
+				}
 				this->BitUpdate(), bbi.BitUpdate();
 				a = this->bit, b = bbi.bit;
 				vi c = HP_BitOr(a, b);
@@ -798,12 +801,6 @@ namespace grnum{
 				HP bbi(bi);
 				return *this | bbi;
 			}
-			friend HP operator| (HP&& abi, HP& bbi){
-				return abi | bbi;
-			}
-			friend HP operator| (HP&& abi, HP&& bbi){
-				return abi | bbi;
-			}
 			friend HP operator| (int ai,HP& bbi){
 				HP abi(ai);
 				return abi | bbi;
@@ -816,6 +813,12 @@ namespace grnum{
 			HP operator^ (HP& bbi){
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return HP(EMPTY);
+				int na = abs(a[0]), nb = abs(b[0]);
+				if(na<LL_LIMIT && nb<LL_LIMIT){
+					ll aa = HP_vecTOll(a);
+					ll bb = HP_vecTOll(b);
+					return HP(aa^bb);
+				}
 				this->BitUpdate(), bbi.BitUpdate();
 				a = this->bit, b = bbi.bit;
 				vi c = HP_BitXor(a, b);
@@ -833,12 +836,6 @@ namespace grnum{
 				HP bbi(bi);
 				return *this ^ bbi;
 			}
-			friend HP operator^ (HP&& abi, HP& bbi){
-				return abi ^ bbi;
-			}
-			friend HP operator^ (HP&& abi, HP&& bbi){
-				return abi ^ bbi;
-			}
 			friend HP operator^ (int ai, HP& bbi){
 				HP abi(ai);
 				return abi ^ bbi;
@@ -850,6 +847,11 @@ namespace grnum{
 
 			friend HP operator~ (HP& abi){
 				if(!abi.num[0]) return HP(EMPTY);
+				int na = abs(abi.num[0]);
+				if(na < LL_LIMIT){
+					ll aa = HP_vecTOll(abi.num);
+					return HP(~aa);
+				}
 				abi.BitUpdate();
 				vi a = abi.bit;
 				vi b = HP_BitNot(a);
@@ -863,20 +865,7 @@ namespace grnum{
 			bool operator> (const HP& bbi) const {
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return false;
-				int na = a[0], nb = b[0];
-				//异号 different signs
-				if(na>0 && nb<0) return true;
-				if(na<0 && nb>0) return false;
-				//同号 the same sign
-				int f = intTOone(na), i;
-				na = abs(na), nb = abs(nb);
-				if(na > nb) return f>0 ? true : false;
-				if(na < nb) return f>0 ? false : true;
-				for(i=na; i; i--){
-					if(a[i] > b[i]) return f>0 ? true : false;
-					if(a[i] < b[i]) return f>0 ? false : true;
-				}
-				return false;//相等 equal
+				return HP_gtr(a, b);
 			}
 			bool operator> (const int bi) const {
 				return *this > HP(bi);
@@ -894,18 +883,7 @@ namespace grnum{
 			bool operator>= (const HP& bbi) const {
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return false;
-				int na = a[0], nb = b[0];
-				if(na>0 && nb<0) return true;
-				if(na<0 && nb>0) return false;
-				int f = intTOone(na), i;
-				na = abs(na), nb = abs(nb);
-				if(na > nb) return f>0 ? true : false;
-				if(na < nb) return f>0 ? false : true;
-				for(i=na; i; i--){
-					if(a[i] > b[i]) return f>0 ? true : false;
-					if(a[i] < b[i]) return f>0 ? false : true;
-				}
-				return true;//相等 equal
+				return HP_geq(a, b);
 			}
 			bool operator>= (const int bi) const {
 				return *this >= HP(bi);
@@ -923,18 +901,7 @@ namespace grnum{
 			bool operator< (const HP& bbi) const {
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return false;
-				int na = a[0], nb = b[0];
-				if(na>0 && nb<0) return false;
-				if(na<0 && nb>0) return true;
-				int f = intTOone(na), i;
-				na = abs(na), nb = abs(nb);
-				if(na > nb) return f>0 ? false : true;
-				if(na < nb) return f>0 ? true : false;
-				for(i=na; i; i--){
-					if(a[i] > b[i]) return f>0 ? false : true;
-					if(a[i] < b[i]) return f>0 ? true : false;
-				}
-				return false;//相等 equal
+				return HP_lss(a, b);
 			}
 			bool operator< (const int bi) const {
 				return *this < HP(bi);
@@ -952,18 +919,7 @@ namespace grnum{
 			bool operator<= (const HP& bbi) const {
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return false;
-				int na = a[0], nb = b[0];
-				if(na>0 && nb<0) return false;
-				if(na<0 && nb>0) return true;
-				int f = intTOone(na), i;
-				na = abs(na), nb = abs(nb);
-				if(na > nb) return f>0 ? false : true;
-				if(na < nb) return f>0 ? true : false;
-				for(i=na; i; i--){
-					if(a[i] > b[i]) return f>0 ? false : true;
-					if(a[i] < b[i]) return f>0 ? true : false;
-				}
-				return true;//相等 equal
+				return HP_leq(a, b);
 			}
 			bool operator<= (const int bi) const {
 				return *this <= HP(bi);
@@ -982,11 +938,7 @@ namespace grnum{
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return false;
 				if(a[0] != b[0]) return false;
-				int n = abs(a[0]), i;
-				for(i=n; i; i--){
-					if(a[i] != b[i]) return false;
-				}
-				return true;
+				return HP_equ(a, b);
 			}
 			bool operator== (const int bi) const {
 				return *this == HP(bi);
@@ -1005,11 +957,7 @@ namespace grnum{
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return false;
 				if(a[0] != b[0]) return true;
-				int n=abs(a[0]), i;
-				for(i=n; i; i--){
-					if(a[i] != b[i]) return true;
-				}
-				return false;
+				return HP_neq(a, b);
 			}
 			bool operator!= (const int bi) const {
 				return *this != HP(bi);
@@ -1283,13 +1231,7 @@ namespace grnum{
 			friend int putsHP(const HP& cbi);	
 	};
 
-	//从我的GreatCalculator搬来的高精度计算函数
-	//High-precision functions adapted from my GreatCalculator
-	inline int get(const vi& a, int i){
-		if(i>0 && i<=abs(a[0])) return a[i];
-		else return 0;
-	}
-	vi HP_Plus(vi a, vi b){
+	static vi HP_Plus(vi a, vi b){
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]), zc;
 	    int na=abs(a[0]), nb=abs(b[0]);
 		if(!na || !nb) return EMPTY;
@@ -1322,7 +1264,7 @@ namespace grnum{
 			return c;
 		}
 	}
-	vi HP_Minus(vi a, vi b){
+	static vi HP_Minus(vi a, vi b){
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]);
 		int na = abs(a[0]), nb = abs(b[0]);
 		if(!na || !nb) return EMPTY;
@@ -1352,6 +1294,7 @@ namespace grnum{
 	            VecSwap(a, b);
 	        }
 	        int na=abs(a[0]), nb=abs(b[0]), i;
+	        a.push_back(0);
 			if(!na || !nb) return EMPTY;
 	        for(i=1; i<=na; i++){
 	            a[i] -= get(b, i);
@@ -1363,7 +1306,7 @@ namespace grnum{
 	        return a;
 	    }
 	}
-	void HP_Karatsuba(int n, const vi& a, const vi& b, vi& c){
+	static void HP_Karatsuba(int n, const vi& a, const vi& b, vi& c){
 	    int i, j;
 	    c.resize(n+n+5, 0);
 	    if(n < KAR_LIMIT){
@@ -1397,7 +1340,7 @@ namespace grnum{
 	    for(i=1; i<=(m<<1); i++) c[i] += z0[i];
 	    return;
 	}
-	vi HP_SimMul(vi a, vi b){
+	static vi HP_SimMul(vi a, vi b){
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]);
 	    char zc = signINmul(za, zb);
 	    int na=abs(a[0]), nb=abs(b[0]);
@@ -1415,7 +1358,7 @@ namespace grnum{
 		if(HP_NumCheck(c)) c = EMPTY;
 	    return c;
 	}
-	vi HP_Multiply(vi a, vi b){
+	static vi HP_Multiply(vi a, vi b){
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]);
 	    char zc = signINmul(za, zb);
 	    int na=abs(a[0]), nb=abs(b[0]);
@@ -1445,7 +1388,7 @@ namespace grnum{
 	    return c;
 	}//感谢星星老师和Gemini帮忙调试乘法算法!
 	 //Thanks to Teacher Stars and Gemini for helping debug the multiplication algorithm!
-	char HP_DivCmp(int r, int n, const vi &a, const vi &b){
+	static char HP_DivCmp(int r, int n, const vi &a, const vi &b){
 	    if(a[r+n] > 0) return true;
 	    if(a[r+n] < 0) return false;
 	    for(int i=n; i>0; i--){
@@ -1454,14 +1397,15 @@ namespace grnum{
 	    }
 	    return true;
 	}
-	inline int HP_DivEst(const vi& a, const vi& b, int r, int nb){
-		int a1 = get(a, r+nb-1);
+	static inline int HP_DivEst(const vi& a, const vi& b, int i, int nb){
+		int a0 = get(a, i+1);
+		int a1 = get(a, i);
 		int b1 = get(b, nb), b2 = get(b, nb-1);
-		int aa = a1*JW;
+		int aa = a0*JW*JW + a1*JW;
 		int bb = b1*JW + b2;
 		return aa / bb;
 	}
-	vi HP_Divide(vi a, vi b){
+	static vi HP_Divide(vi a, vi b){
 	    char za=intTOsign(a[0]), zb=intTOsign(b[0]);
 	    char zc = signINmul(za, zb);
 	    int na=abs(a[0]), nb=abs(b[0]);
@@ -1475,11 +1419,10 @@ namespace grnum{
 		}
 	    int nc = na-nb+5;
 		vi c(nc+5, 0);
-		a.resize(nc+5, 0), b.resize(nc+5, 0);
-//	    AllResize(nc+5, a, b, c);
+		a.resize(na+5, 0), b.resize(nb+5, 0);
 	    int i, j, q, t;
 	    for(i=na-nb+1; i>0; i--){
-			q = HP_DivEst(a, b, i, nb);
+			q = HP_DivEst(a, b, i+nb-1, nb);
 			if(q > 0){
 				for(j=1; j<=nb; j++){
 					a[i+j-1] -= b[j]*q;
@@ -1515,7 +1458,7 @@ namespace grnum{
 		if(HP_NumCheck(c)) c = EMPTY;
 	    return c;
 	}
-	vi HP_Power(vi a, ll b){
+	static vi HP_Power(vi a, ll b){
 	    vi c = ONE;
 		while(b){
 			if(b & 1) c = HP_Multiply(c, a), b--;
@@ -1524,7 +1467,7 @@ namespace grnum{
 		if(HP_NumCheck(c)) c = EMPTY;
 		return c;
 	}
-	vi HP_Module(vi a, vi b){
+	static vi HP_Module(vi a, vi b){
 	    int na=abs(a[0]), nb=abs(b[0]);
 		if(!na || !nb) return EMPTY;
 		if(na < nb) return a;
@@ -1534,11 +1477,10 @@ namespace grnum{
 			ll cc = aa%bb;
 			return HP_llTOvec(cc);
 		}
-	    int nc = na-nb+5;
-	    a.resize(nc+5), b.resize(nc+5);
+	    a.resize(na+5), b.resize(nb+5);
 	    int i, j, q, t;
 	    for(i=na-nb+1; i>0; i--){
-			q = HP_DivEst(a, b, i, nb);
+			q = HP_DivEst(a, b, i+nb-1, nb);
 			if(q > 0){
 				for(j=1; j<=nb; j++){
 					a[i+j-1] -= b[j]*q;
@@ -1584,7 +1526,7 @@ namespace grnum{
 		return HP_pow(HP(ai), HP(bi));
 	}
 
-	vi HP_ThouTOBit(vi a){
+	static vi HP_ThouTOBit(vi a){
 		//不要加引用!
 		//do not use quoting!
 		vi b(1, 0), temp;
@@ -1623,7 +1565,7 @@ namespace grnum{
 		b[0] = nb;
 		return b;
 	}
-	vi HP_BitTOThou(vi a){
+	static vi HP_BitTOThou(vi a){
 		int na = a[0];
 		int sign = a[na] ? -1 : 1;
 		a[na] = 0;
@@ -1649,66 +1591,157 @@ namespace grnum{
 		b[0] *= sign;
 		return b;
 	}
-	void HP_BitLenSet(vi& a, int nc){
-		int na = a[0], signa = a[na] ? -1 : 1;
-		a.resize(nc+2, signa>0 ? 0 : BIT_JW-1);
-		a[nc] = signa>0 ? 0 : (BIT_JW-1);
-		a[0] = nc;
+	static inline int bitget(const vi& a, int i){
+		int n = a[0], sign = a[n] ? -1 : 1;
+		if(i > n) return sign>0 ? 0 : (BIT_JW-1);
+		else return a[i];
 	}
-	vi HP_BitAnd(vi a, vi b){
+	static vi HP_BitAnd(vi a, vi b){
 		int na = a[0], nb = b[0];
 		if(!na || !nb) return EMPTY;
 		int nc = max(na, nb), i;
 		vi c(nc+2, 0);
-		
-		//长度统一为nc+1
-		//unify lengths to nc+1
-		HP_BitLenSet(a, nc);
-		HP_BitLenSet(b, nc);
-
-		for(i=1; i<=nc; i++) c[i] = a[i]&b[i];
+		for(i=1; i<=nc; i++){
+			c[i] = bitget(a, i)&bitget(b, i);
+		}
 		c[0] = nc;
 		if(HP_NumCheck(c)) c = EMPTY;
 		return c;
 	}
-	vi HP_BitOr(vi a, vi b){
+	static vi HP_BitOr(vi a, vi b){
 		int na = a[0], nb = b[0];
 		if(!na || !nb) return EMPTY;
 		int nc = max(na, nb), i;
 		vi c(nc+2, 0);
-		
-		//长度统一为nc+1
-		//unify lengths to nc+1
-		HP_BitLenSet(a, nc);
-		HP_BitLenSet(b, nc);
-		
-		for(i=1; i<=nc; i++) c[i] = a[i]|b[i];
+		for(i=1; i<=nc; i++){
+			c[i] = bitget(a, i)|bitget(b, i); 
+		}
 		c[0] = nc;
 		if(HP_NumCheck(c)) c = EMPTY;
 		return c;
 	}
-	vi HP_BitXor(vi a, vi b){
+	static vi HP_BitXor(vi a, vi b){
 		int na = a[0], nb = b[0];
 		if(!na || !nb) return EMPTY;
 		int nc = max(na, nb), i;
 		vi c(nc+2, 0);
-		
-		//长度统一为nc+1
-		//unify lengths to nc+1
-		HP_BitLenSet(a, nc);
-		HP_BitLenSet(b, nc);
-		
-		for(i=1; i<=nc; i++) c[i] = a[i]^b[i];
+		for(i=1; i<=nc; i++){
+			c[i] = bitget(a, i)^bitget(b, i);
+		}
 		c[0] = nc;
 		if(HP_NumCheck(c)) c = EMPTY;
 		return c;
 	}
-	vi HP_BitNot(vi a){
+	static vi HP_BitNot(vi a){
 		int na = a[0], i;
 		if(!na) return EMPTY;
 		for(i=1; i<=na; i++) a[i] = a[i]^(BIT_JW-1);
 		if(HP_NumCheck(a)) a = EMPTY;
 		return a;
+	}
+	
+	
+	static bool HP_gtr(const vi& a, const vi& b){
+		int na = a[0], nb = b[0];
+		if(abs(na)<LL_LIMIT && abs(nb)<LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			return aa > bb;
+		}
+		//异号 different signs
+		if(na>0 && nb<0) return true;
+		if(na<0 && nb>0) return false;
+		//同号 the same sign
+		int f = intTOone(na), i;
+		na = abs(na), nb = abs(nb);
+		if(na > nb) return f>0 ? true : false;
+		if(na < nb) return f>0 ? false : true;
+		for(i=na; i; i--){
+			if(a[i] > b[i]) return f>0 ? true : false;
+			if(a[i] < b[i]) return f>0 ? false : true;
+		}
+		return false;//相等 equal
+	}
+	static bool HP_geq(const vi& a, const vi& b){
+		int na = a[0], nb = b[0];
+		if(abs(na)<LL_LIMIT && abs(nb)<LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			return aa >= bb;
+		}
+		if(na>0 && nb<0) return true;
+		if(na<0 && nb>0) return false;
+		int f = intTOone(na), i;
+		na = abs(na), nb = abs(nb);
+		if(na > nb) return f>0 ? true : false;
+		if(na < nb) return f>0 ? false : true;
+		for(i=na; i; i--){
+			if(a[i] > b[i]) return f>0 ? true : false;
+			if(a[i] < b[i]) return f>0 ? false : true;
+		}
+		return true;//相等 equal
+	}
+	static bool HP_lss(const vi& a, const vi& b){
+		int na = a[0], nb = b[0];
+		if(abs(na)<LL_LIMIT && abs(nb)<LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			return aa < bb;
+		}
+		if(na>0 && nb<0) return false;
+		if(na<0 && nb>0) return true;
+		int f = intTOone(na), i;
+		na = abs(na), nb = abs(nb);
+		if(na > nb) return f>0 ? false : true;
+		if(na < nb) return f>0 ? true : false;
+		for(i=na; i; i--){
+			if(a[i] > b[i]) return f>0 ? false : true;
+			if(a[i] < b[i]) return f>0 ? true : false;
+		}
+		return false;//相等 equal
+	}
+	static bool HP_leq(const vi& a, const vi& b){
+		int na = a[0], nb = b[0];
+		if(abs(na)<LL_LIMIT && abs(nb)<LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			return aa <= bb;
+		}
+		if(na>0 && nb<0) return false;
+		if(na<0 && nb>0) return true;
+		int f = intTOone(na), i;
+		na = abs(na), nb = abs(nb);
+		if(na > nb) return f>0 ? false : true;
+		if(na < nb) return f>0 ? true : false;
+		for(i=na; i; i--){
+			if(a[i] > b[i]) return f>0 ? false : true;
+			if(a[i] < b[i]) return f>0 ? true : false;
+		}
+		return true;//相等 equal
+	}
+	static bool HP_equ(const vi& a, const vi& b){
+		int n = abs(a[0]), i;
+		if(n < LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			return aa == bb;
+		}
+		for(i=n; i; i--){
+			if(a[i] != b[i]) return false;
+		}
+		return true;
+	}
+	static bool HP_neq(const vi& a, const vi& b){
+		int n=abs(a[0]), i;
+		if(n < LL_LIMIT){
+			ll aa = HP_vecTOll(a);
+			ll bb = HP_vecTOll(b);
+			return aa != bb;
+		}
+		for(i=n; i; i--){
+			if(a[i] != b[i]) return true;
+		}
+		return false;
 	}
 
 	HP getHP(){

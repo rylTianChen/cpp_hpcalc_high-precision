@@ -13,32 +13,32 @@ int main() {
     HP b = s2;
     HP c;
 
-    puts("Ô¤ÈÈÖÐ...");
+    puts("é¢„çƒ­ä¸­...");
         c = a + b;
 //        c = a - b;
 //        c = a * b;
 //        c = a / b;
 
-    puts("¿ªÊ¼²âÊÔ");
+    puts("å¼€å§‹æµ‹è¯•");
     const int TEST_COUNT = 5;
     long long times[TEST_COUNT];
 
     for(int t = 0; t < TEST_COUNT; t++) {
         auto st = std::chrono::steady_clock::now();
-        // ±»²âÔËËã
+        // è¢«æµ‹è¿ç®—
         c = a%998244353;
         // C = A - B;
         // C = A * B;
         // C = A / B;
         auto ed = std::chrono::steady_clock::now();
         times[t] = std::chrono::duration_cast<std::chrono::milliseconds>(ed - st).count();
-        std::cout << "µÚ" << t+1 << "´Î: " << times[t] << " ms" << std::endl;
+        std::cout << "ç¬¬" << t+1 << "æ¬¡: " << times[t] << " ms" << std::endl;
     }
 
-    // ¼ÆËãÆ½¾ù
+    // è®¡ç®—å¹³å‡
     long long sum = 0;
     for(int t = 0; t < TEST_COUNT; t++) sum += times[t];
-    std::cout << "\nÆ½¾ù: " << sum / TEST_COUNT << " ms" << std::endl;
+    std::cout << "\nå¹³å‡: " << sum / TEST_COUNT << " ms" << std::endl;
 
     return 0;
 }

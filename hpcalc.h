@@ -1,7 +1,7 @@
 /*
 欢迎使用此高精度库!
 作者:天辰
-版本:1.4
+版本:1.5
 使用说明:
 	这是一个有符号整数高精度计算库,不支持浮点数运算。
 	变量类型名称为HP。例: HP a=2;可以定义一个名为a的高精度变量,它存储的整数为2。
@@ -54,7 +54,7 @@
 /*
 Welcome to this high-precision library!
 Authors: TianChen
-Version: 1.4
+Version: 1.5
 Instructions:
     This is a signed arbitrary-precision integer library.
 	Floating-point operations are not supported.

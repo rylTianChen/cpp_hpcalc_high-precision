@@ -1275,7 +1275,6 @@ namespace grnum{
 			ll aa = HP_vecTOll(a);
 			ll bb = HP_vecTOll(b);
 			ll cc = aa-bb;
-			printf("aa=%d bb=%d cc=%d\n", aa, bb, cc);
 			return HP_llTOvec(cc);
 		}
 	    if(za=='+' && zb=='-'){

@@ -263,9 +263,10 @@ namespace grnum{
 	}//千进制解压为十进制 Decompress thousand-based to decimal
 	static inline ll HP_vecTOll(const vi& b){
 	    ll ans = 0; int nb = abs(b[0]);
+	    ll sign = intTOone(b[0]);
 		if(nb > 5) return 0;//可能溢出
 	    while(nb) ans = ans*JW+b[nb--];
-	    return ans;
+	    return ans*sign;
 	}//高精度转为ll    Convert HP to long long
 	static inline vi HP_intTOvec(int ai){
 		if(!ai) return ZERO;
@@ -619,7 +620,9 @@ namespace grnum{
 			HP operator- (const HP& bbi) const {
 				vi a = this->num, b = bbi.num;
 				if(!a[0] || !b[0]) return HP(EMPTY);
+				putvec(a), putvec(b);
 				vi c = HP_Minus(a, b);
+				putvec(c);
 				return HP(c);
 			}
 			HP operator- (const int bi) const {
@@ -1272,6 +1275,7 @@ namespace grnum{
 			ll aa = HP_vecTOll(a);
 			ll bb = HP_vecTOll(b);
 			ll cc = aa-bb;
+			printf("aa=%d bb=%d cc=%d\n", aa, bb, cc);
 			return HP_llTOvec(cc);
 		}
 	    if(za=='+' && zb=='-'){

@@ -28,7 +28,7 @@
     	5.乘方运算限制：当指数的十进制位数超过8位时,判定结果过大,HP_pow()返回EMPTY。
     	6.若计算结果出现错误，即某些位上的值是负数，返回值是EMPTY。
     	7.若参与运算的数包含EMPTY空值，数学运算符返回EMPTY，逻辑运算符返回false。
-    	8.由于存储方法，长度不得超过int的范围。 
+    	8.由于存储方法，长度不得超过int的范围。
     其他内置函数:
         clear():将变量的值清空为EMPTY。
         length()、size():获取变量绝对值的位数。EMPTY返回0。
@@ -43,8 +43,8 @@
 		CountDigit(int x): 统计整个数中有几个x。 EMPTY的返回值是0。
 		ISPalindrome(): 功能如其名。
 		RemoveDigit(int p): 删除从末位开始第p位的数码。成功返回0,出现问题返回1。
-		
-	你可以直接把HP变量赋值给int、long long、bool和string。 
+
+	你可以直接把HP变量赋值给int、long long、bool和string。
     祝您使用愉快!
     若发现问题,请向lyrTianChen09@outlook.com反馈。
 天辰还开发了一个高精度计算器。获取方式：
@@ -90,7 +90,7 @@ Instructions:
 		7.If any operand is EMPTY:
 		    - arithmetic operators return EMPTY
 		    - comparison & logical operators return false
-		8.Because of storage method, the length may not exceed the range of int.	   
+		8.Because of storage method, the length may not exceed the range of int.
 	Other built-in functions:
 		clear(): Clears the variable's value to EMPTY.
 		length(), size(): Gets the number of digits of the variable's absolute value.
@@ -179,7 +179,7 @@ namespace grnum{
 	static const int MAX_INT = 2147483647, MIN_INT = -2147483648;
 	static const ll MAX_LL =  9223372036854775807ll, MIN_LL = -9223372036854775807ll-1;
 	static const int INT_LEN = 9, LL_LEN = 18;
-	
+
 	static const vi EMPTY = {0};//Error返回值 error indicator
 	//EMPTY特征: EMPTY[0] = 0    Feature of EMPTY: EMPTY[0] = 0
 	static const vi ONE = {1, 1}, M_ONE = {-1, 1}, ZERO = {1, 0};
@@ -322,7 +322,7 @@ namespace grnum{
 	static vi HP_BitOr(vi a, vi b);
 	static vi HP_BitXor(vi a, vi b);
 	static vi HP_BitNot(vi a);
-	
+
 	//高精度比较运算函数声明
 	//Declarations of HP comparison functions
 	static bool HP_gtr(const vi& a, const vi& b);
@@ -430,7 +430,10 @@ namespace grnum{
 						n++;
 						num.push_back(ch-48);
 					}else if(IsSign(ch)){
-						if(!n) f = -1;
+						if(!n){
+							if(ch == '+') f = 1;
+							if(ch == '-') f = -1;
+						}
 						else{
 							n = -1;
 							break;
@@ -595,6 +598,9 @@ namespace grnum{
 				num[0] = n*intTOone(num[0]);
 				num = HP_zip(num);
 				return 0;
+			}
+			inline vi getvec(){
+				return num;
 			}
 
 			//重载运算符 Overloaded operator
@@ -974,7 +980,7 @@ namespace grnum{
 			friend bool operator!= (const ll ai, const HP& bbi){
 				return HP(ai) != bbi;
 			}
-			
+
 			friend bool operator! (const HP& bbi){
 				return bbi.num[0]==1 && bbi.num[1]==0;
 			}
@@ -1231,7 +1237,7 @@ namespace grnum{
 			}
 
 			friend int putHP(const HP& cbi);
-			friend int putsHP(const HP& cbi);	
+			friend int putsHP(const HP& cbi);
 	};
 
 	static vi HP_Plus(vi a, vi b){
@@ -1617,7 +1623,7 @@ namespace grnum{
 		int nc = max(na, nb), i;
 		vi c(nc+2, 0);
 		for(i=1; i<=nc; i++){
-			c[i] = bitget(a, i)|bitget(b, i); 
+			c[i] = bitget(a, i)|bitget(b, i);
 		}
 		c[0] = nc;
 		if(HP_NumCheck(c)) c = EMPTY;
@@ -1642,8 +1648,8 @@ namespace grnum{
 		if(HP_NumCheck(a)) a = EMPTY;
 		return a;
 	}
-	
-	
+
+
 	static bool HP_gtr(const vi& a, const vi& b){
 		int na = a[0], nb = b[0];
 		if(abs(na)<LL_LIMIT && abs(nb)<LL_LIMIT){
@@ -1794,7 +1800,7 @@ namespace grnum{
 	int putsHP(const HP& cbi){
 		int ret = putHP(cbi);
 		puts("");
-		return ret; 
+		return ret;
 	}
 }
 
